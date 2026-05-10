@@ -17,6 +17,7 @@
 # =============================================================================
 
 import sys
+import pickle
 import numpy as np
 
 # -- Project modules -------------------------------------------------------
@@ -66,9 +67,25 @@ def main(stage2: bool = False) -> None:
     model = train_model(X_train, y_train)
     save_model(model)
 
+    # Save system metadata for demo.py and inference
+    import os
+    from src.config import RESULTS_DIR
+    os.makedirs(RESULTS_DIR, exist_ok=True)
+    feature_names = list(X_train.columns)
+    system_meta = {
+        "knowledge": knowledge,
+        "priors": priors,
+        "likelihoods": likelihoods,
+        "bin_edges": bin_edges,
+        "feature_names": feature_names
+    }
+    meta_path = os.path.join(RESULTS_DIR, "system_meta.pkl")
+    with open(meta_path, "wb") as f:
+        pickle.dump(system_meta, f)
+    print(f"[main] System metadata saved -> {meta_path}")
+
     # -- Step 6: Integrated Expert System (batch predict on test set) ------
     print("[STEP 6] Running integrated expert system on test set...")
-    feature_names = list(X_train.columns)
     es = ExpertSystem(knowledge, priors, likelihoods, bin_edges, model, feature_names)
     results = es.predict_batch(X_test)
 

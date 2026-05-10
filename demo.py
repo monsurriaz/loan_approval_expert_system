@@ -62,7 +62,7 @@ def collect_applicant() -> dict:
     Collect applicant data interactively from the console.
     Returns a dict with raw (pre-encoded) values.
     """
-    print("\n── Enter Applicant Details ───────────────────────────────")
+    print("\n-- Enter Applicant Details --------------------------------")
     applicant_raw = {
         "Gender":          get_input("Gender (Male/Female)",    ["Male", "Female"]),
         "Married":         get_input("Married (Yes/No)",        ["Yes", "No"]),
@@ -108,9 +108,9 @@ def print_result(result: dict) -> None:
     """Pretty-print the expert system decision."""
     decision = result["decision"]
     colour = {
-        "Approve":       "✅",
-        "Manual Review": "⚠️",
-        "Reject":        "❌"
+        "Approve":       "[APPROVED]",
+        "Manual Review": "[REVIEW]",
+        "Reject":        "[REJECTED]"
     }.get(decision, "")
 
     print("\n" + "=" * 60)
@@ -129,7 +129,7 @@ def print_result(result: dict) -> None:
 
 def main():
     print("\n" + "=" * 60)
-    print("  Loan Approval Expert System — Interactive Demo")
+    print("  Loan Approval Expert System - Interactive Demo")
     print("=" * 60)
 
     try:
