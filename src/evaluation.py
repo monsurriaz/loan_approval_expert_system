@@ -3,13 +3,13 @@
 # Component 6: Evaluation
 #
 # Stage 1 (core pipeline):
-#   - metrics.json         → accuracy, precision, recall, F1
-#   - predictions.csv      → per-applicant decisions
-#   - confusion_matrix.png → visual confusion matrix
+#   - metrics.json         -> accuracy, precision, recall, F1
+#   - predictions.csv      -> per-applicant decisions
+#   - confusion_matrix.png -> visual confusion matrix
 #
 # Stage 2 (after core works):
 #   - feature_importance.png
-#   - component_comparison.png  ← KB vs Bayesian vs ML vs Integrated
+#   - component_comparison.png  <- KB vs Bayesian vs ML vs Integrated
 #   - bias_analysis.json
 # =============================================================================
 
@@ -29,7 +29,7 @@ def _ensure_results_dir() -> None:
     os.makedirs(RESULTS_DIR, exist_ok=True)
 
 
-# ── Stage 1 ───────────────────────────────────────────────────────────────────
+# -- Stage 1 ---------------------------------------------------------------
 
 def compute_metrics(
     y_true: np.ndarray | pd.Series,
@@ -43,7 +43,7 @@ def compute_metrics(
         y_pred: Predicted labels (0/1).
 
     Returns:
-        Dict of metric_name → float value (rounded to 4 dp).
+        Dict of metric_name -> float value (rounded to 4 dp).
     """
     metrics = {
         "accuracy":  round(accuracy_score(y_true, y_pred), 4),
@@ -52,10 +52,10 @@ def compute_metrics(
         "f1_score":  round(f1_score(y_true, y_pred, zero_division=0), 4),
     }
 
-    print("\n── Evaluation Metrics ────────────────────────────────────")
+    print("\n-- Evaluation Metrics ----------------------------------------")
     for k, v in metrics.items():
         print(f"  {k:<12}: {v:.4f}")
-    print("──────────────────────────────────────────────────────────\n")
+    print("----------------------------------------------------------\n")
 
     return metrics
 
@@ -72,7 +72,7 @@ def save_metrics(metrics: dict, path: str | None = None) -> None:
     out = path or os.path.join(RESULTS_DIR, "metrics.json")
     with open(out, "w") as f:
         json.dump(metrics, f, indent=2)
-    print(f"[evaluation] Metrics saved → {out}")
+    print(f"[evaluation] Metrics saved -> {out}")
 
 
 def save_predictions(
@@ -99,7 +99,7 @@ def save_predictions(
 
     out = os.path.join(RESULTS_DIR, "predictions.csv")
     df.to_csv(out, index=False)
-    print(f"[evaluation] Predictions saved → {out}")
+    print(f"[evaluation] Predictions saved -> {out}")
 
 
 def plot_confusion_matrix(
@@ -139,10 +139,10 @@ def plot_confusion_matrix(
     out = os.path.join(RESULTS_DIR, "confusion_matrix.png")
     plt.savefig(out, dpi=150)
     plt.close()
-    print(f"[evaluation] Confusion matrix saved → {out}")
+    print(f"[evaluation] Confusion matrix saved -> {out}")
 
 
-# ── Stage 2 ───────────────────────────────────────────────────────────────────
+# -- Stage 2 ---------------------------------------------------------------
 
 def plot_feature_importance(importance_df: pd.DataFrame) -> None:
     """
@@ -162,7 +162,7 @@ def plot_feature_importance(importance_df: pd.DataFrame) -> None:
     out = os.path.join(RESULTS_DIR, "feature_importance.png")
     plt.savefig(out, dpi=150)
     plt.close()
-    print(f"[evaluation] Feature importance saved → {out}")
+    print(f"[evaluation] Feature importance saved -> {out}")
 
 
 def plot_component_comparison(
@@ -208,7 +208,7 @@ def plot_component_comparison(
     out = os.path.join(RESULTS_DIR, "component_comparison.png")
     plt.savefig(out, dpi=150)
     plt.close()
-    print(f"[evaluation] Component comparison saved → {out}")
+    print(f"[evaluation] Component comparison saved -> {out}")
 
 
 def run_bias_analysis(
@@ -244,5 +244,5 @@ def run_bias_analysis(
     out = os.path.join(RESULTS_DIR, "bias_analysis.json")
     with open(out, "w") as f:
         json.dump(bias, f, indent=2)
-    print(f"[evaluation] Bias analysis saved → {out}")
+    print(f"[evaluation] Bias analysis saved -> {out}")
     print(f"  Bias breakdown: {bias}")

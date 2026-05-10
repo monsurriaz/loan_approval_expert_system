@@ -1,6 +1,6 @@
 # =============================================================================
 # knowledge_base.py
-# Component 2: Knowledge Representation — data-driven expert rules
+# Component 2: Knowledge Representation - data-driven expert rules
 # Thresholds are extracted from training data, not hardcoded
 # =============================================================================
 
@@ -71,7 +71,7 @@ def apply_rules(applicant: dict, knowledge: dict) -> tuple[float, list]:
     weighted confidence score between 0.0 and 1.0.
 
     Args:
-        applicant : Dict of feature_name → encoded numeric value.
+        applicant : Dict of feature_name -> encoded numeric value.
         knowledge : Knowledge base dict from build_knowledge_base().
 
     Returns:

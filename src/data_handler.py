@@ -34,10 +34,10 @@ def basic_eda(df: pd.DataFrame) -> None:
     print("EXPLORATORY DATA ANALYSIS")
     print("=" * 60)
 
-    print("\n── Column types ──────────────────────────────────────────")
+    print("\n-- Column types ------------------------------------------")
     print(df.dtypes.to_string())
 
-    print("\n── Missing values ────────────────────────────────────────")
+    print("\n-- Missing values ----------------------------------------")
     missing = df.isnull().sum()
     missing = missing[missing > 0]
     if missing.empty:
@@ -45,10 +45,10 @@ def basic_eda(df: pd.DataFrame) -> None:
     else:
         print(missing.to_string())
 
-    print(f"\n── Target distribution ({TARGET_COL}) ─────────────────────")
+    print(f"\n-- Target distribution ({TARGET_COL}) --------------------")
     print(df[TARGET_COL].value_counts().to_string())
     print(f"  Approval rate: {(df[TARGET_COL] == 'Y').mean():.1%}")
 
-    print("\n── Sample rows ───────────────────────────────────────────")
+    print("\n-- Sample rows -------------------------------------------")
     print(df.head(3).to_string())
     print("=" * 60 + "\n")

@@ -1,6 +1,6 @@
 # =============================================================================
 # ml_model.py
-# Component 5: Machine Learning — RandomForestClassifier
+# Component 5: Machine Learning - RandomForestClassifier
 # Single model, first version. Cross-validation and model selection
 # will be added in Stage 2 if time permits.
 # =============================================================================
@@ -77,7 +77,7 @@ def save_model(model: RandomForestClassifier, path: str = MODEL_PATH) -> None:
     """
     with open(path, "wb") as f:
         pickle.dump(model, f)
-    print(f"[ml_model] Model saved → {path}")
+    print(f"[ml_model] Model saved -> {path}")
 
 
 def load_model(path: str = MODEL_PATH) -> RandomForestClassifier:
@@ -92,7 +92,7 @@ def load_model(path: str = MODEL_PATH) -> RandomForestClassifier:
     """
     with open(path, "rb") as f:
         model = pickle.load(f)
-    print(f"[ml_model] Model loaded ← {path}")
+    print(f"[ml_model] Model loaded <- {path}")
     return model
 
 

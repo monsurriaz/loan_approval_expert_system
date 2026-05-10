@@ -1,6 +1,6 @@
 # =============================================================================
 # preprocessing.py
-# Component 1b: Preprocessing — clean, encode, split, and save processed data
+# Component 1b: Preprocessing - clean, encode, split, and save processed data
 # No scaling applied (RandomForest does not require it)
 # =============================================================================
 
@@ -16,8 +16,8 @@ from src.config import (
 def handle_missing(df: pd.DataFrame) -> pd.DataFrame:
     """
     Impute missing values:
-    - Numerical columns → median imputation
-    - Categorical columns → mode imputation
+    - Numerical columns -> median imputation
+    - Categorical columns -> mode imputation
 
     Args:
         df: Raw DataFrame (may contain NaN).
@@ -30,14 +30,14 @@ def handle_missing(df: pd.DataFrame) -> pd.DataFrame:
     for col in NUMERICAL_COLS:
         if col in df.columns and df[col].isnull().any():
             median_val = df[col].median()
-            df[col].fillna(median_val, inplace=True)
-            print(f"  [preprocess] {col}: filled {df[col].isnull().sum()} NaN → median={median_val:.1f}")
+            df[col] = df[col].fillna(median_val)
+            print(f"  [preprocess] {col}: filled {df[col].isnull().sum()} NaN -> median={median_val:.1f}")
 
     for col in CATEGORICAL_COLS:
         if col in df.columns and df[col].isnull().any():
             mode_val = df[col].mode()[0]
-            df[col].fillna(mode_val, inplace=True)
-            print(f"  [preprocess] {col}: filled NaN → mode='{mode_val}'")
+            df[col] = df[col].fillna(mode_val)
+            print(f"  [preprocess] {col}: filled NaN -> mode='{mode_val}'")
 
     return df
 
@@ -45,7 +45,7 @@ def handle_missing(df: pd.DataFrame) -> pd.DataFrame:
 def encode_features(df: pd.DataFrame) -> pd.DataFrame:
     """
     Encode categorical features as integer codes.
-    Convert Target column Loan_Status Y/N → 1/0.
+    Convert Target column Loan_Status Y/N -> 1/0.
 
     Args:
         df: DataFrame after missing value handling.
@@ -117,8 +117,8 @@ def save_processed(train_df: pd.DataFrame, test_df: pd.DataFrame) -> None:
     """
     train_df.to_csv(DATA_TRAIN, index=False)
     test_df.to_csv(DATA_TEST, index=False)
-    print(f"[preprocess] Saved → {DATA_TRAIN}")
-    print(f"[preprocess] Saved → {DATA_TEST}")
+    print(f"[preprocess] Saved -> {DATA_TRAIN}")
+    print(f"[preprocess] Saved -> {DATA_TEST}")
 
 
 def run_preprocessing(df: pd.DataFrame) -> tuple:

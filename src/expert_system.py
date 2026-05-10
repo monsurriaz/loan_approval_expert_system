@@ -1,6 +1,6 @@
 # =============================================================================
 # expert_system.py
-# Integration Layer — combines KB + Bayesian + ML via Best-First Search
+# Integration Layer - combines KB + Bayesian + ML via Best-First Search
 # ExpertSystem.predict() returns decision + confidence + full explanation
 # =============================================================================
 
@@ -18,10 +18,10 @@ class ExpertSystem:
 
     Architecture:
         Applicant data
-             │
-             ├──► Knowledge Base (rules)      ──► kb_score   ─┐
-             ├──► Bayesian Reasoner            ──► bayes_prob  ├──► Best-First Search ──► Decision
-             └──► ML Model (RandomForest)      ──► ml_prob    ─┘
+             |
+             |---> Knowledge Base (rules)      ---> kb_score   -|
+             |---> Bayesian Reasoner            ---> bayes_prob  |---> Best-First Search ---> Decision
+             +---> ML Model (RandomForest)      ---> ml_prob    -|
 
     Usage:
         es = ExpertSystem(knowledge, priors, likelihoods, bin_edges, model)
@@ -60,13 +60,13 @@ class ExpertSystem:
         Generate a loan approval decision for a single applicant.
 
         Steps:
-        1. Apply expert rules → kb_score
-        2. Bin numeric features, then compute Bayesian probability → bayes_prob
-        3. Run ML model → ml_prob
-        4. Greedy Best-First Search combines all three → final decision
+        1. Apply expert rules -> kb_score
+        2. Bin numeric features, then compute Bayesian probability -> bayes_prob
+        3. Run ML model -> ml_prob
+        4. Greedy Best-First Search combines all three -> final decision
 
         Args:
-            applicant: Dict mapping feature_name → encoded numeric value.
+            applicant: Dict mapping feature_name -> encoded numeric value.
                        Must include all features in self.feature_names.
 
         Returns:
@@ -80,24 +80,24 @@ class ExpertSystem:
                 all_candidates : Ranked list of all decision candidates
                 explanation    : Human-readable string
         """
-        # ── Step 1: Knowledge Base ────────────────────────────────────────────
+        # -- Step 1: Knowledge Base ----------------------------------------
         kb_score, fired_rules = apply_rules(applicant, self.knowledge)
 
-        # ── Step 2: Bayesian Reasoning ────────────────────────────────────────
+        # -- Step 2: Bayesian Reasoning ------------------------------------
         applicant_df = pd.DataFrame([applicant])
         binned_df, _ = bin_numerical_columns(applicant_df, bin_edges=self.bin_edges)
         applicant_binned = binned_df.iloc[0].to_dict()
         bayes_prob = bayesian_score(applicant_binned, self.priors, self.likelihoods)
 
-        # ── Step 3: ML Model ──────────────────────────────────────────────────
+        # -- Step 3: ML Model -----------------------------------------------
         applicant_ml_df = pd.DataFrame([applicant])[self.feature_names]
         _, ml_probs = predict(self.model, applicant_ml_df)
         ml_prob = float(ml_probs[0])
 
-        # ── Step 4: Best-First Search (integration) ───────────────────────────
+        # -- Step 4: Best-First Search (integration) -----------------------
         search_result = greedy_best_first_search(kb_score, bayes_prob, ml_prob)
 
-        # ── Step 5: Build explanation string ──────────────────────────────────
+        # -- Step 5: Build explanation string ----------------------------
         rule_text = ", ".join(fired_rules) if fired_rules else "none"
         explanation = (
             f"Decision: {search_result['decision']} "

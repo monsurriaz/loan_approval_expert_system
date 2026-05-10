@@ -1,6 +1,6 @@
 # =============================================================================
 # main.py
-# Entry point — run the full loan approval expert system pipeline.
+# Entry point - run the full loan approval expert system pipeline.
 #
 # Usage:
 #   python main.py
@@ -19,7 +19,7 @@
 import sys
 import numpy as np
 
-# ── Project modules ───────────────────────────────────────────────────────────
+# -- Project modules -------------------------------------------------------
 from src.data_handler       import load_data, basic_eda
 from src.preprocessing      import run_preprocessing
 from src.knowledge_base     import build_knowledge_base
@@ -39,12 +39,12 @@ def main(stage2: bool = False) -> None:
     print("  AI-Based Expert System for Loan Approval Decision Support")
     print("=" * 60)
 
-    # ── Step 1: Load data ─────────────────────────────────────────────────────
+    # -- Step 1: Load data -------------------------------------------------
     print("\n[STEP 1] Loading data...")
     df = load_data()
     basic_eda(df)
 
-    # ── Step 2: Preprocess ────────────────────────────────────────────────────
+    # -- Step 2: Preprocess ------------------------------------------------
     print("[STEP 2] Preprocessing...")
     X_train, X_test, y_train, y_test, processed_df = run_preprocessing(df)
 
@@ -53,20 +53,20 @@ def main(stage2: bool = False) -> None:
     train_df_with_target = X_train.copy()
     train_df_with_target[TARGET_COL] = y_train.values
 
-    # ── Step 3: Knowledge Base ────────────────────────────────────────────────
+    # -- Step 3: Knowledge Base --------------------------------------------
     print("[STEP 3] Building knowledge base...")
     knowledge = build_knowledge_base(train_df_with_target)
 
-    # ── Step 4: Bayesian Reasoning ────────────────────────────────────────────
+    # -- Step 4: Bayesian Reasoning ----------------------------------------
     print("[STEP 4] Training Bayesian reasoner...")
     priors, likelihoods, bin_edges = train_bayesian(X_train, y_train)
 
-    # ── Step 5: ML Model ──────────────────────────────────────────────────────
+    # -- Step 5: ML Model --------------------------------------------------
     print("[STEP 5] Training ML model (RandomForest)...")
     model = train_model(X_train, y_train)
     save_model(model)
 
-    # ── Step 6: Integrated Expert System (batch predict on test set) ──────────
+    # -- Step 6: Integrated Expert System (batch predict on test set) ------
     print("[STEP 6] Running integrated expert system on test set...")
     feature_names = list(X_train.columns)
     es = ExpertSystem(knowledge, priors, likelihoods, bin_edges, model, feature_names)
@@ -81,14 +81,14 @@ def main(stage2: bool = False) -> None:
     # Also get pure ML predictions for comparison
     y_pred_ml, _ = predict(model, X_test)
 
-    # ── Step 7: Stage 1 Evaluation ────────────────────────────────────────────
+    # -- Step 7: Stage 1 Evaluation ----------------------------------------
     print("[STEP 7] Evaluating (Stage 1)...")
     metrics = compute_metrics(y_test, y_pred_integrated)
     save_metrics(metrics)
     save_predictions(X_test, y_test, results)
     plot_confusion_matrix(y_test, y_pred_integrated)
 
-    # ── Step 8: Stage 2 (optional) ───────────────────────────────────────────
+    # -- Step 8: Stage 2 (optional) ----------------------------------------
     if stage2:
         print("[STEP 8] Running Stage 2 analysis...")
         importance_df = get_feature_importance(model, feature_names)
@@ -98,7 +98,7 @@ def main(stage2: bool = False) -> None:
     else:
         print("[STEP 8] Skipping Stage 2. Run with --stage2 flag to generate extra plots.")
 
-    # ── Done ──────────────────────────────────────────────────────────────────
+    # -- Done ---------------------------------------------------------------
     print("\n" + "=" * 60)
     print("  PIPELINE COMPLETE")
     print(f"  Accuracy  : {metrics['accuracy']:.4f}")
@@ -110,9 +110,9 @@ def main(stage2: bool = False) -> None:
     # Print a sample prediction for verification
     sample = X_test.iloc[0].to_dict()
     sample_result = es.predict(sample)
-    print("── Sample prediction (first test applicant) ──────────────")
+    print("-- Sample prediction (first test applicant) -----------")
     print(f"  {sample_result['explanation']}")
-    print("──────────────────────────────────────────────────────────\n")
+    print("----------------------------------------------------------\n")
 
 
 if __name__ == "__main__":

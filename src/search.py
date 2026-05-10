@@ -1,6 +1,6 @@
 # =============================================================================
 # search.py
-# Component 4: Search Algorithm — Greedy Best-First Search
+# Component 4: Search Algorithm - Greedy Best-First Search
 # Ranks three candidate decisions (Approve / Manual Review / Reject)
 # using a weighted heuristic of KB + Bayesian + ML scores
 # =============================================================================
@@ -11,12 +11,12 @@ from src.config import (
 )
 
 
-# ── Candidate decisions ───────────────────────────────────────────────────────
+# -- Candidate decisions ---------------------------------------------------
 
 CANDIDATES = ["Approve", "Manual Review", "Reject"]
 
 
-# ── State representation ──────────────────────────────────────────────────────
+# -- State representation --------------------------------------------------
 
 class DecisionState:
     """
@@ -61,7 +61,7 @@ class DecisionState:
         )
 
 
-# ── Heuristic mapping ─────────────────────────────────────────────────────────
+# -- Heuristic mapping -----------------------------------------------------
 
 def _label_for_score(combined_score: float) -> str:
     """
@@ -81,7 +81,7 @@ def _label_for_score(combined_score: float) -> str:
         return "Reject"
 
 
-# ── Core search ───────────────────────────────────────────────────────────────
+# -- Core search -----------------------------------------------------------
 
 def score_candidates(
     kb_score: float,

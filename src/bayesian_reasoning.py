@@ -14,7 +14,7 @@ from src.config import (
 )
 
 
-# ── Step 1: Binning ───────────────────────────────────────────────────────────
+# -- Step 1: Binning -------------------------------------------------------
 
 def bin_numerical_columns(
     df: pd.DataFrame,
@@ -43,14 +43,14 @@ def bin_numerical_columns(
             df[col] = pd.cut(
                 df[col],
                 bins=edges,
-                labels=BIN_LABELS,
+                labels=False,
                 include_lowest=True
             ).astype(str)
         else:
             binned, edges = pd.qcut(
                 df[col],
                 q=N_BINS,
-                labels=BIN_LABELS,
+                labels=False,
                 retbins=True,
                 duplicates="drop"
             )
@@ -60,7 +60,7 @@ def bin_numerical_columns(
     return df, (bin_edges if bin_edges else computed_edges)
 
 
-# ── Step 2: Priors ────────────────────────────────────────────────────────────
+# -- Step 2: Priors -------------------------------------------------------
 
 def compute_priors(y_train: pd.Series) -> dict:
     """
@@ -82,7 +82,7 @@ def compute_priors(y_train: pd.Series) -> dict:
     return priors
 
 
-# ── Step 3: Likelihoods ───────────────────────────────────────────────────────
+# -- Step 3: Likelihoods ---------------------------------------------------
 
 def compute_likelihoods(
     X_train_binned: pd.DataFrame,
@@ -130,7 +130,7 @@ def compute_likelihoods(
     return likelihoods
 
 
-# ── Step 4: Inference ─────────────────────────────────────────────────────────
+# -- Step 4: Inference -----------------------------------------------------
 
 def bayesian_score(
     applicant_binned: dict,
@@ -140,13 +140,13 @@ def bayesian_score(
     """
     Compute P(Approved | features) using the Naive Bayes formula.
 
-    P(Approved | x) ∝ P(Approved) × ∏ P(x_i | Approved)
-    P(Rejected | x) ∝ P(Rejected) × ∏ P(x_i | Rejected)
+    P(Approved | x) ~ P(Approved) x product P(x_i | Approved)
+    P(Rejected | x) ~ P(Rejected) x product P(x_i | Rejected)
 
     Returns the normalised probability of approval.
 
     Args:
-        applicant_binned : Dict of feature → binned string value.
+        applicant_binned : Dict of feature -> binned string value.
         priors           : Output of compute_priors().
         likelihoods      : Output of compute_likelihoods().
 
@@ -177,7 +177,7 @@ def bayesian_score(
     return round(float(prob_approved), 4)
 
 
-# ── Public training wrapper ───────────────────────────────────────────────────
+# -- Public training wrapper -----------------------------------------------
 
 def train_bayesian(
     X_train: pd.DataFrame,
@@ -185,7 +185,7 @@ def train_bayesian(
 ) -> tuple[dict, dict, dict]:
     """
     Full Bayesian training pipeline:
-    bin → compute priors → compute likelihoods.
+    bin -> compute priors -> compute likelihoods.
 
     Args:
         X_train: Encoded feature DataFrame (numerical columns still as floats).

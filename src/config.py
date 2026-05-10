@@ -6,7 +6,7 @@
 
 import os
 
-# ── Paths ─────────────────────────────────────────────────────────────────────
+# -- Paths ----------------------------------------------------------------
 BASE_DIR    = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_RAW    = os.path.join(BASE_DIR, "data", "raw", "loan_data.csv")
 DATA_TRAIN  = os.path.join(BASE_DIR, "data", "processed", "train.csv")
@@ -15,11 +15,11 @@ MODEL_PATH  = os.path.join(BASE_DIR, "models", "best_model.pkl")
 PREP_PATH   = os.path.join(BASE_DIR, "models", "preprocessor.pkl")
 RESULTS_DIR = os.path.join(BASE_DIR, "results")
 
-# ── Reproducibility ───────────────────────────────────────────────────────────
+# -- Reproducibility -------------------------------------------------------
 RANDOM_SEED = 42
 TEST_SIZE   = 0.2
 
-# ── Dataset columns ───────────────────────────────────────────────────────────
+# -- Dataset columns -------------------------------------------------------
 TARGET_COL = "Loan_Status"
 DROP_COLS  = ["Loan_ID"]
 
@@ -36,23 +36,23 @@ NUMERICAL_COLS = [
 # Columns that need binning before Bayesian reasoning
 COLS_TO_BIN = NUMERICAL_COLS
 
-# ── Bayesian binning ──────────────────────────────────────────────────────────
+# -- Bayesian binning -------------------------------------------------------
 # Each numerical column will be cut into 3 equal-frequency bins: low/medium/high
 N_BINS      = 3
 BIN_LABELS  = ["low", "medium", "high"]
 LAPLACE_K   = 1          # Laplace smoothing constant
 
-# ── Search weights ────────────────────────────────────────────────────────────
+# -- Search weights -------------------------------------------------------
 # How much each component contributes to final decision score
 WEIGHT_ML      = 0.50
 WEIGHT_BAYES   = 0.30
 WEIGHT_KB      = 0.20
 
 # Confidence thresholds for three-way decision
-APPROVE_THRESHOLD       = 0.60   # score >= 0.60 → Approve
-MANUAL_REVIEW_THRESHOLD = 0.40   # 0.40 <= score < 0.60 → Manual Review
-                                 # score < 0.40 → Reject
+APPROVE_THRESHOLD       = 0.60   # score >= 0.60 = Approve
+MANUAL_REVIEW_THRESHOLD = 0.40   # 0.40 <= score < 0.60 = Manual Review
+                                 # score < 0.40 = Reject
 
-# ── ML model ─────────────────────────────────────────────────────────────────
+# -- ML model ---------------------------------------------------------------
 RF_N_ESTIMATORS = 100
 RF_MAX_DEPTH    = None
