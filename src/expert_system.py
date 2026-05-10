@@ -98,16 +98,16 @@ class ExpertSystem:
         search_result = greedy_best_first_search(kb_score, bayes_prob, ml_prob)
 
         # -- Step 5: Build explanation string ----------------------------
-        rule_text = ", ".join(fired_rules) if fired_rules else "none"
+        rule_text = ", ".join(fired_rules) if fired_rules else "None"
         explanation = (
-            f"Decision: {search_result['decision']} "
-            f"(confidence={search_result['confidence']:.2f}) | "
-            f"KB rules fired: [{rule_text}] (score={kb_score:.2f}) | "
-            f"Bayesian P(Approved)={bayes_prob:.2f} | "
-            f"ML P(Approved)={ml_prob:.2f}"
+            f"Decision: {search_result['decision']} (confidence={search_result['confidence']:.2f}) | "
+            f"Approval score={search_result['final_approval_score']:.2f} | "
+            f"KB={kb_score:.2f} | Bayes={bayes_prob:.2f} | ML={ml_prob:.2f} | "
+            f"Rules: [{rule_text}]"
         )
 
         return {
+            "final_approval_score": search_result["final_approval_score"],
             "decision":        search_result["decision"],
             "confidence":      search_result["confidence"],
             "kb_score":        kb_score,

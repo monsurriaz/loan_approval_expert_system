@@ -118,10 +118,13 @@ def greedy_best_first_search(
     Greedy Best-First Search over candidate decisions.
 
     Algorithm:
-    1. Generate all candidate DecisionState nodes.
-    2. Compute heuristic score h(state) for each (weighted combination).
-    3. Select the candidate whose label matches the heuristic score range.
-    4. Return the best decision with full explanation.
+    1. Calculate final approval score as weighted combination.
+    2. Compute individual candidate scores:
+       - approve_score = final_approval_score
+       - reject_score = 1 - final_approval_score
+       - manual_review_score = 1 - abs(final_approval_score - 0.5) * 2
+    3. Rank candidates by individual score (highest wins).
+    4. Return decision with confidence matching winning candidate's score.
 
     Args:
         kb_score  : Rule-based score from knowledge base.
@@ -129,33 +132,39 @@ def greedy_best_first_search(
         ml_prob   : Approval probability from ML model.
 
     Returns:
-        Dict with keys: decision, confidence, kb_score, bayes_prob, ml_prob,
-        all_candidates (ranked list for transparency).
+        Dict with keys: final_approval_score, decision, confidence,
+        kb_score, bayes_prob, ml_prob, all_candidates (ranked list).
     """
-    states = score_candidates(kb_score, bayes_prob, ml_prob)
-
-    # Combined weighted score
-    combined = (
+    # Calculate final approval score (weighted combination)
+    final_approval_score = (
         WEIGHT_KB    * kb_score
         + WEIGHT_BAYES * bayes_prob
         + WEIGHT_ML    * ml_prob
     )
-    combined = round(combined, 4)
+    final_approval_score = round(final_approval_score, 4)
 
-    # Greedy selection: pick label matching score range (best-first)
-    best_label = _label_for_score(combined)
-    best_state = next(s for s in states if s.label == best_label)
+    # Calculate individual candidate scores
+    approve_score = final_approval_score
+    reject_score = 1 - final_approval_score
+    manual_review_score = 1 - abs(final_approval_score - 0.5) * 2
 
-    # Rank all candidates by descending score for report transparency
-    ranked = sorted(states, key=lambda s: s.score, reverse=True)
+    # Create candidates with their individual scores
+    candidates = [
+        {"label": "Approve", "score": round(approve_score, 4)},
+        {"label": "Manual Review", "score": round(manual_review_score, 4)},
+        {"label": "Reject", "score": round(reject_score, 4)}
+    ]
+
+    # Rank by score descending - highest scorer wins
+    ranked = sorted(candidates, key=lambda c: c["score"], reverse=True)
+    best_candidate = ranked[0]
 
     return {
-        "decision":       best_label,
-        "confidence":     combined,
+        "final_approval_score": final_approval_score,
+        "decision":       best_candidate["label"],
+        "confidence":     best_candidate["score"],
         "kb_score":       kb_score,
         "bayes_prob":     bayes_prob,
         "ml_prob":        ml_prob,
-        "all_candidates": [
-            {"label": s.label, "score": s.score} for s in ranked
-        ]
+        "all_candidates": ranked
     }

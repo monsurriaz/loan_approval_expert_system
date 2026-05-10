@@ -39,7 +39,10 @@ def bin_numerical_columns(
             continue
 
         if bin_edges and col in bin_edges:
-            edges = bin_edges[col]
+            edges = list(bin_edges[col])
+            # Set infinite bounds to safely handle out-of-range values
+            edges[0] = -float('inf')
+            edges[-1] = float('inf')
             df[col] = pd.cut(
                 df[col],
                 bins=edges,
