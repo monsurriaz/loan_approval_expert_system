@@ -63,15 +63,17 @@ def collect_applicant() -> dict:
     Returns a dict with raw (pre-encoded) values.
     """
     print("\n-- Enter Applicant Details --------------------------------")
+    print("Note: Income values are treated as monthly income in the dataset's")
+    print("original unit. LoanAmount is in thousands, so 120 means 120,000.\n")
     applicant_raw = {
         "Gender":          get_input("Gender (Male/Female)",    ["Male", "Female"]),
         "Married":         get_input("Married (Yes/No)",        ["Yes", "No"]),
         "Dependents":      get_input("Dependents (0/1/2/3+)",   ["0","1","2","3+"]),
         "Education":       get_input("Education (Graduate/Not Graduate)", ["Graduate", "Not Graduate"]),
         "Self_Employed":   get_input("Self Employed (Yes/No)",  ["Yes", "No"]),
-        "ApplicantIncome": get_input("Applicant Income (number)", cast=float),
-        "CoapplicantIncome": get_input("Coapplicant Income (0 if none)", cast=float),
-        "LoanAmount":      get_input("Loan Amount (in thousands)", cast=float),
+        "ApplicantIncome": get_input("Applicant Monthly Income (number, dataset unit)", cast=float),
+        "CoapplicantIncome": get_input("Coapplicant Monthly Income (0 if none, dataset unit)", cast=float),
+        "LoanAmount":      get_input("Loan Amount in thousands (example: 120 means 120,000)", cast=float),
         "Loan_Amount_Term":get_input("Loan Term in months (e.g. 360)", cast=float),
         "Credit_History":  get_input("Credit History (1=Good, 0=Bad)", [1, 0], cast=int),
         "Property_Area":   get_input("Property Area (Urban/Semiurban/Rural)",
